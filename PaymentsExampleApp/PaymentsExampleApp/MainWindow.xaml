@@ -15,10 +15,10 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="Пользователь:" Width="125" Margin="5" VerticalAlignment="Center"
                        TextAlignment="Right"></TextBlock>
-            <ComboBox Name="ComboUsers" SelectedIndex="0" Width="175" Margin="5" DisplayMemberPath="FIO"></ComboBox>
+            <ComboBox Name="ComboUsers" SelectionChanged="UpdateChart" SelectedIndex="0" Width="175" Margin="5" DisplayMemberPath="FIO"></ComboBox>
             <TextBlock Text="Тип диаграммы:" Width="125" Margin="5" VerticalAlignment="Center"
                            TextAlignment="Right"></TextBlock>
-            <ComboBox Name="ComboChartTypes" SelectedIndex="0" Width="175" Margin="5"></ComboBox>
+            <ComboBox Name="ComboChartTypes" SelectionChanged="UpdateChart" SelectedIndex="0" Width="175" Margin="5"></ComboBox>
         </StackPanel>
         <WindowsFormsHost Grid.Row="1" Margin="5">
             <charts:Chart x:Name="ChartPayments">
