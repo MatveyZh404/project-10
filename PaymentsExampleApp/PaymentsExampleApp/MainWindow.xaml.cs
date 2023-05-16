@@ -21,26 +21,41 @@ namespace PaymentsExampleApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private PaymentsBaseEntities _context = new PaymentsBaseEntities();
+        private PaymentsBaseEntities _context = new PaymentsBaseEntities(); // Создаем область построения графиков
+
         public MainWindow()
         {
             InitializeComponent();
             ChartPayments.ChartAreas.Add(new ChartArea("Main"));
 
-            var currentSeries = new Series("Payments");
+            var currentSeries = new Series("Payments") //Добавляем наборы данных
             {
-                IsValueShownAsLabel = true;
-            }
+                IsValueShownAsLabel = true
+            };
             ChartPayments.Series.Add(currentSeries);
 
-            ComboUsers.IteamsSource = _context.Users.ToList();
+            ComboUsers.ItemsSource = _context.User.ToList(); //Загружаем данные из базы
             ComboChartTypes.ItemsSource = Enum.GetValues(typeof(SeriesChartType));
-        }
-    }
-    private void UpdateChart(object sender, SelectionChangedEventArgs e)
-    {
-        if (ComboUsers.SelectedIteam is User currentUser &&
-                ComboChartTypes.SelectedItem is SeriesChartType currentType)
 
+        }
+
+        private void UpdateChart(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboUsers.SelectedItem is User currentUser && 
+                ComboChartTypes.SelectedItem is SeriesChartType currentType) // Получаем выбранные значения в выпадающих списках
+            {
+                Series currentSeries = ChartPayments.Series.FirstOrDefault(); // Обрабатываем данные программы
+                currentSeries.ChartType = currentType;
+                currentSeries.Points.Clear();
+
+                var categoriesList = _context.Category.ToList(); // Обрабатываем список категорий 
+                foreach (var category in categoriesList)
+                {
+                    currentSeries.Points.AddXY(category.Name,
+                        _context.Payment.ToList().Where(p => p.User == currentUser
+                        && p.Category == category).Sum(p => p.Price * p.Num));
+                }
+            }
+        }
     }
 }
